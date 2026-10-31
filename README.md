@@ -1,4 +1,4 @@
-# Sony Xperia 5 IV SOG09: Malaysian Network Compatibility Investigation
+# Sony Xperia 5 IV SOG09: 5G SA, VoNR and Malaysian Carrier Fixes
 
 **Report date:** 1 November 2026, Asia/Kuala_Lumpur.
 
@@ -9,6 +9,18 @@ This report documents the investigation of Malaysian 5G SA, IMS, Wi-Fi and modem
 The investigation established n28 and n78 SA data service, n28 operation at 20 MHz, successful NR-only call establishment in recorded trials, and offline NR RRC decoding on the device. These results apply to the examined phone and file revisions; they do not establish complete equivalence with global firmware.
 
 The linked evidence includes intermediate investigation reports. Results reported before a controlled change must be distinguished from subsequent validation. Where the exact recovery sequence or reset writer was not isolated, the report retains that limitation.
+
+### Symptoms covered
+
+This report addresses the Japanese KDDI **Sony Xperia 5 IV SOG09** and the following connectivity symptoms:
+
+- **5G not working / only 4G available** despite n28/n78 coverage.
+- **5G SA not detected or not registering**, including MIB/SIB1 reception without registration.
+- **VoNR calls failing in NR-only mode** while LTE calling works.
+- `ROW_Commercial` selected instead of `YTL_Commercial` for a Yes SIM.
+- n28 20 MHz compatibility, carrier-profile persistence and IMS provisioning in Malaysia.
+
+The tested corrections require root and revision-matched modem files. The report separates verified results from unresolved behavior; it is not a universal fix for every Xperia variant or operator.
 
 ### Report contents
 
@@ -888,3 +900,12 @@ Some historical EFS writes were performed manually through EFS Explorer. No univ
 - [Archived BeeWare Android Python runtime](https://github.com/beeware/Python-Android-support/releases/tag/3.10-b2)
 
 Raw logs and backups can contain subscriber identifiers and network metadata. The published set excludes complete device backups and raw subscriber traces. The publication manifest identifies excluded and redacted material.
+
+### Related SOG09 problem reports
+
+These links provide independently reported symptoms and search context. They do not establish that another device has the same cause or validate every workaround in the discussion.
+
+- [Japanese Xperia 5 IV: 5G not working, only 4G](https://www.reddit.com/r/SonyXperia/comments/1l6mwss/i_have_sony_5_iv_japanese_model_5g_not_working/).
+- [Xperia 5 IV SOG09 cannot connect to 5G in France](https://www.reddit.com/r/SonyXperia/comments/1lbt2mk/xperia_5_iv_sog09_wont_connect_to_5g_in_france/).
+- [Sony: understanding 5G SA on Xperia smartphones](https://www.sony.ee/electronics/support/articles/00371610).
+- [Sony Malaysia: VoLTE support, subscription and software requirements](https://www.sony.com.my/electronics/support/mobile-phones-tablets-mobile-phones/xperia-5-iv-256gb/articles/SX669701).
