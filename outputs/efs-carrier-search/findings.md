@@ -1,0 +1,13 @@
+# Full accessible EFS carrier-policy search
+
+Read-only recursive directory enumeration and literal case-insensitive content search for carrier_policy / carrier.xml.
+
+Live inventory:189directories,1376totalentries,1188non-directoryentries. Read1187files successfully,1313165bytes;nofailedpartialreads. Oneentrycouldnotbeopened:/nv/item_files/modem/uim/remote/uim_remote_service_enable(DIAGbad-commandresponse/timeout). Directoryenumerationdeniedfor/.efs_private,/nvm,/safe,/sfs. Symlinksnotrecursivelyfollowedasdirectories. Noqueue-limitreported.
+
+Noaccessiblelivefilenamenamedcarrier.xml,carrier_policy.xmlorcarrier_policy.xml_Subscription01. Onlyliteralcontentmatch:/policyman/policies.xmloffset969referencescarrier_policy. Arbitrarilycompressed/encryptedobjectsnotdecodedbythisliteralcontentscan;thisisnotaproofofabsencefromfirmwareorprotectedstores.
+
+Originalefs-backup.zip:1246archiveentriessearchedforliteralreferences,onlypolicyman/policies.xmlmatched. Archivecontains900bytecarrier_policy.xmlandidenticalSubscription01copy;exactXMLpayloadisinROWMCFGrecordafteronebyte07prefix. YTLhasnonamedpolicymanrecords. Existingotherreportdocumentscomparison. Noinferenceaboutcompiledfallbacksordeletionevent.
+
+NoEFS/NVwrites,profilechangesorreboot. Libraryloggingmode restored/deinitialized. USB DIAG wasnotdisabled.
+
+Evidence:live-inventory.txt,live-files.json,live-content-search.txt,backup-content-hits.json,result.json.

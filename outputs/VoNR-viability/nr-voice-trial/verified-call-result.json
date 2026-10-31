@@ -1,0 +1,13 @@
+{
+  "call_active_time": "2026-10-31 10:49:19 Asia/Kuala_Lumpur",
+  "call_record_time": "10:49:32",
+  "network_preference": "NR only",
+  "current_radio": "NR_SA",
+  "IMS_call": "onCallStarted, ACTIVE, isWifi:N",
+  "call_RAT_start": 20,
+  "call_RAT_end": 20,
+  "setup_failed": false,
+  "NR_voice_item": "01 confirmed via guarded content readback",
+  "scope": "Call establishment over cellular NR verified; audio quality/two-way audio needs user confirmation; reboot persistence not yet separately verified",
+  "changes_this_turn": "read-only verification"
+}

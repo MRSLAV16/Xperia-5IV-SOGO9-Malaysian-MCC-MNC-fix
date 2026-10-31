@@ -1,0 +1,26 @@
+{
+  "selection_database_sha256": "0d6970b188558bf5feda7e3646db8612432d91fd57fc177f86afa48e092ab42a",
+  "readback_verified": true,
+  "removed_forcing_rules": [
+    "DCM13",
+    "KDDI7",
+    "KDDI_SA239",
+    "SBM28"
+  ],
+  "SIM_mappings": {
+    "502-152": "YTL45",
+    "502-18": "UMobile61",
+    "502-12": "Maxis87"
+  },
+  "ROW_fallback": "retained",
+  "international_rules": "unchanged canonical comparison",
+  "NR_voice_byte": "01 verified",
+  "boot_test": "passed NR-SA/IMS registration without root",
+  "other_operator_tests": "not performed",
+  "IMS_registered_by_uptime_seconds": 83.1,
+  "root": "su unavailable throughout test",
+  "call_test_after_reboot": "failed to establish; NRvoice item reverted00",
+  "no_root_recovery": "both modules disabled before reboot",
+  "NR_voice_byte_after_boot": "00",
+  "root_free_VoNR_persistence": "not achieved"
+}

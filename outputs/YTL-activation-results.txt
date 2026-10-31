@@ -1,0 +1,11 @@
+YTL_Commercial is ACTIVE on slot 0.
+
+PDC Set Selected Config and Activate Config both returned success. A fresh query confirmed YTL active and no pending selection.
+
+Yes 502-152 was in service before activation and returned to IN_SERVICE with a CONNECTED data session after activation. Android reports LTE. IMS/VoLTE and actual call functionality are unverified.
+
+An NR-only trial ran for 45 seconds. At 15, 30 and 45 seconds Android reported OUT_OF_SERVICE and no registered NR technology. The original LTE|LTE_CA|NR mode was restored, and service/data connectivity returned. YTL remained active.
+
+Conclusion: the profile switch succeeded; SA registration did not succeed in this test. Missing automatic YTL selection alone does not explain the entire observed problem. The failure stage remains unknown without supported NR diagnostic logs and a verified coverage control.
+
+ROW remains installed. Its configuration ID and the return-tool mode are saved in YTL-current-state.json. The return command has not been executed/tested. No selection XML, digest or manual NV/band-mask edit was made. Profile selection persistence after reboot/SIM change is untested.

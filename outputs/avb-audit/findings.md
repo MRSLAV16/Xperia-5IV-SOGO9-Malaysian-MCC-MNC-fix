@@ -1,0 +1,21 @@
+# Active-slot AVB audit — 2026-10-31
+
+Read-onlyinspection. Active slot_b. Bootreports locked,flash.locked1,verifiedbootstategreen,veritymodeenforcing. vbmeta_b andvbmeta_system_b first64KiBcopiedread-onlyandparsedusingofficialAOSPavbtool. Noflash,remount,disableverity,slotchangeorreboot.
+
+Mainvbmeta: SHA256_RSA4096,flags0,rollbackindex1759276800. Directhashdescriptorsboot,dtbo,vendor_boot. Directhashtreedescriptorsodm,vendor,vendor_dlkm. Chainedrecovery(location1)andvbmeta_system(location2). vbmeta_system:SHA256_RSA4096,flags0,hashtreesproduct,system,system_ext. Recoverychildmetadata/payloadnotindependentlyreadinthisaudit. Noallpartitionhashcheckperformed;descriptorinventoryandmountedveritystatewerechecked.
+
+fstabconfirmsavb=vbmeta_systemfor system/system_ext/product;avbforvendor/vendor_dlkm/odm. Active/proc mappingsshowproduct-verity,system-verity,system_ext-verity,vendor-verity,vendor_dlkm-verity,odm-verity. OEMhasseparateveritymappingandfstabavb_keys=/product/etc/security/avb/oem.avbpubkey;itschildmetadatawasnotparsedhere.
+
+WiFirelevance:
+/vendor/bin/init.qcom.early_boot.sh -> vendorhashtree
+/vendor/etc/wifi/WCNSS_qcom_cfg.ini -> vendorhashtree
+/vendor/etc/wifi/regdb.bin andbdwlan.e8d -> vendorhashtree
+/vendor_dlkm/lib/modules/qca_cld3_wlan.ko -> vendor_dlkmhashtree
+/product/overlay/ServiceWifiRes-Nagara-Overlay.apk -> producthashtree
+StockWiFiframeworkAPEXbaseinverifiedsystemarea;updatedAPEXunder/dataalsousesindependentsignature/payloadverification. NotanunverifiededitableJARroute.
+
+/dataandpersistarenotlistedindescriptorsparsedhere. persistfstabuseswait,checkwithoutavb;mountisrw. Firmware/EFSmayhaveindependentvalidation;absencefromtheseAVBdescriptorsdoesnotmeanallfirmwareisunsigned. PersistWiFiINIisstillregeneratedfromvendoratboot. Runtimecountrycommanddoesnotmodifyverifiedpartitionbytes,explainingTWwithgreenstate.
+
+Changingprotectedfilesystembytescanfaildm-verityreadchecksorbootverification. Merelyrecalculatinghashes/re-signingwithanuntrustedkeydoesnotpreservethelockedOEMtrustchain. Rootscriptingcanapplyruntimechangeswithoutpartitionwritesbutrequiresrootavailablewhenitexecutes. Root-freepersistentTWoverrideremainssolvedonlyifavalidtrustedbootconsumerexists;noneestablished.
+
+Evidence: vbmeta_b-info.txt,vbmeta_system_b-info.txt,read-onlyimages. Toolsource:https://android.googlesource.com/platform/external/avb/+/refs/heads/main/avbtool.py ; concepts:https://android.googlesource.com/platform/external/avb/

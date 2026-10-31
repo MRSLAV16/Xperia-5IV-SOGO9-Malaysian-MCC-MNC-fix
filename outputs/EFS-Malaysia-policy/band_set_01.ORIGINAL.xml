@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policy name            = "generic"
+        enabled         = "true"
+        schema_ver      = "1"
+        policy_ver      = "44.2.2"
+>
+ <initial>
+<!-- moved the plmns / mcc section to plmn_mcc_supported_01.xml file -->
+
+    <rf_band_list ns="global" name="rf_bands_all">
+      <gw_bands base="none">
+        <include> 7 8 9 19 21 22 23 25 26 </include>
+      </gw_bands>
+      <!-- Support LTE band 1,3,4,5,7,8,11,12,13,17,18,19,20,26,28,38,39,41,42 -->
+      <lte_bands base="none">
+        <include> 0 2 3 4 6 7 10 11 12 16 17 18 19 25 27 37 38 40 41 </include>
+      </lte_bands>
+      <tds_bands base="none" />
+     <!-- Support 5G band 3,28,41,77,78 -->
+      <nr5g_sa_bands base="none" >
+        <include> 2 27 40 76 77 </include>
+      </nr5g_sa_bands>
+      <nr5g_nsa_bands base="none">
+        <include> 2 27 40 76 77 </include>
+      </nr5g_nsa_bands>
+      <nr5g_nrdc_bands base="none" />
+    </rf_band_list>
+
+    <rf_band_list ns="global" name="rf_bands_home">
+<!-- Disabled 2G/3G on Home NW due to separating between Home and JP Roam -->
+      <gw_bands base="none" />
+<!--        <include> 22 </include>
+      </gw_bands> -->
+<!-- Disabled 2G/3G on Home NW due to separating between Home and JP Roam -->
+      <!-- Support LTE band 1,3,11,18,26,28,41,42 -->
+      <lte_bands base="none">
+        <include> 0 2 10 17 25 27 40 41 </include>
+      </lte_bands>
+      <tds_bands base="none" />
+     <!-- Support 5G band 3,28,41,77,78 -->
+      <nr5g_sa_bands base="none" >
+        <include> 2 27 40 76 77 </include>
+      </nr5g_sa_bands>
+      <nr5g_nsa_bands base="none">
+        <include> 2 27 40 76 77 </include>
+      </nr5g_nsa_bands>
+      <nr5g_nrdc_bands base="none" />
+    </rf_band_list>
+
+    <rf_band_list ns="global" name="rf_bands_jp_roam">
+      <gw_bands base="none">
+        <include> 22 </include>
+      </gw_bands>
+      <!-- Support LTE band 1,3,8,11,18,19,26,28,41,42 -->
+      <lte_bands base="none">
+        <include> 0 2 7 10 17 18 25 27 40 41 </include>
+      </lte_bands>
+      <tds_bands base="none" />
+     <!-- Support 5G band 3,28,41,77,78 -->
+      <nr5g_sa_bands base="none" >
+        <include> 2 27 40 76 77 </include>
+      </nr5g_sa_bands>
+      <nr5g_nsa_bands base="none">
+        <include> 2 27 40 76 77 </include>
+      </nr5g_nsa_bands>
+      <nr5g_nrdc_bands base="none" />
+    </rf_band_list>
+
+    <rf_band_list ns="global" name="rf_bands_roam">
+      <gw_bands base="none">
+        <include> 7 8 9 19 21 22 23 25 26 </include>
+      </gw_bands>
+      <!-- Support LTE band 1,3,4,5,7,12,13,17,20,28,38,39,41 -->
+      <lte_bands base="none">
+        <include> 0 2 3 4 6 11 12 16 19 27 37 38 40 </include>
+      </lte_bands>
+      <tds_bands base="none" />
+      <nr5g_sa_bands base="none" />
+      <nr5g_nsa_bands base="none" />
+      <nr5g_nrdc_bands base="none" />
+    </rf_band_list>
+
+    <!-- RF Band List: supported bands in FCC country -->
+    <rf_band_list ns="global" name="rf_bands_fcc">
+      <gw_bands base="none">
+        <include> 7 8 9 19 21 22 23 25 26 </include>
+      </gw_bands>
+      <!-- Support LTE band 1,3,4,5,7,13,17,20,28,41 -->
+      <lte_bands base="none">
+<!--        <include> 0 2 3 4 6 12 16 19 27 40 </include> -->
+<!-- RID013017 Activate Specific LTE/5G Bands in US Region -->
+        <include> 3 4 11 12 16 40 </include>
+      </lte_bands>
+      <tds_bands base="none" />
+      <nr5g_sa_bands base="none" />
+      <nr5g_nsa_bands base="none" />
+      <nr5g_nrdc_bands base="none" />
+    </rf_band_list>
+
+<!-- RID013018 Activate Specific LTE/5G Bands in Europe Region -->
+    <rf_band_list ns="global" name="rf_bands_eu">
+      <gw_bands base="none">
+        <include> 7 8 9 19 21 22 23 25 26 </include>
+      </gw_bands>
+      <lte_bands base="none">
+        <include> 0 2 6 19 27 37 </include>
+      </lte_bands>
+      <tds_bands base="none"/>
+      <nr5g_sa_bands base="none" />
+      <nr5g_nsa_bands base ="none" />
+      <nr5g_nrdc_bands base="none" />
+    </rf_band_list>
+
+<!-- RID013025 [Regulatory] Disable/Enable Local 5G -->
+    <rf_band_list ns="global" name="rf_bands_local_service">
+      <gw_bands base="none">
+        <include> 7 8 9 19 21 22 23 25 26 </include>
+      </gw_bands>
+      <lte_bands base="none">
+        <include> 0 27 </include>
+      </lte_bands>
+      <tds_bands base="none"/>
+      <nr5g_sa_bands base="none" />
+      <nr5g_nsa_bands base ="none" />
+      <nr5g_nrdc_bands base="none" />
+    </rf_band_list>
+
+<!-- RID014050 Disable SA support for Docomo on K4 variant -->
+    <rf_band_list ns="global" name="rf_bands_docomo">
+      <gw_bands base="none">
+        <include> 22 </include>
+      </gw_bands>
+      <!-- Support LTE band 1,3,8,11,18,19,26,28,41,42 -->
+      <lte_bands base="none">
+        <include> 0 2 7 10 17 18 25 27 40 41 </include>
+      </lte_bands>
+      <tds_bands base="none" />
+      <nr5g_sa_bands base="none" />
+      <nr5g_nsa_bands base="none">
+        <include> 2 27 40 76 77 </include>
+      </nr5g_nsa_bands>
+      <nr5g_nrdc_bands base="none" />
+    </rf_band_list>
+ </initial>
+
+ <if>
+    <any_of>
+      <not> <phone_operating_mode> ONLINE </phone_operating_mode> </not>
+      <not> <have_location /> </not>
+    </any_of>
+    <then>
+      <stop />
+    </then>
+ </if>
+
+ <!--
+  ==========================================================================
+    Rule for Supported Bands (Operator PLMN)
+  ==========================================================================
+ -->
+ <if>
+    <serving_plmn_in list="operator_plmn_list" />
+    <then>
+   <rf_bands list="rf_bands_home" />
+    </then>
+  </if>
+
+  <!--
+  ==========================================================================
+    Rule for Supported Bands (Japan)
+  ==========================================================================
+  -->
+  <if>
+    <all_of>
+      <not> <serving_plmn_in list="operator_plmn_list" /> </not>
+      <not> <serving_plmn_in list="docomo_plmn" /> </not>
+      <serving_mcc_in list="jp_mccs" />
+    </all_of>
+    <then>
+	 <rf_bands list="rf_bands_jp_roam" />
+    </then>
+  </if>
+
+  <!--
+  ==========================================================================
+    Rule for Supported Bands (Test PLMN)
+  ==========================================================================
+  -->
+  <if>
+    <serving_mcc_in list="default_mccs" />
+    <then>
+	<rf_bands list="rf_bands_all" />
+    </then>
+  </if>
+
+  <!--
+  ==========================================================================
+    Rule for Supported Bands (FCC)
+  ==========================================================================
+  -->
+  <if>
+    <serving_mcc_in list="fcc_mccs" />
+    <then>
+	<rf_bands list="rf_bands_fcc" />
+    </then>
+  </if>
+
+  <!--
+  ==========================================================================
+    Rule for Supported Bands (EU region)
+  ==========================================================================
+  -->
+  <if>
+    <serving_mcc_in list="all_europe_m"/>
+    <then>
+      <rf_bands list="rf_bands_eu"/>
+    </then>
+  </if>
+
+  <!--
+  ==========================================================================
+    Rule for Supported Bands (Local service)
+  ==========================================================================
+  -->
+  <if>
+    <serving_mcc_in list="local_service_mccs"/>
+    <then>
+        <rf_bands list="rf_bands_local_service"/>
+    </then>
+  </if>
+
+  <!--
+  ==========================================================================
+    Rule for Supported Bands (Docomo Roaming)
+  ==========================================================================
+  -->
+  <if>
+    <serving_plmn_in list="docomo_plmn"/>
+    <then>
+        <rf_bands list="rf_bands_docomo"/>
+    </then>
+  </if>
+
+  <!--
+  ==========================================================================
+    Rule for Supported Bands (Other Roaming)
+  ==========================================================================
+  -->
+  <if>
+    <all_of>
+      <not> <serving_mcc_in list="jp_mccs" /> </not>
+      <not> <serving_mcc_in list="default_mccs" /> </not>
+      <not> <serving_mcc_in list="fcc_mccs" /> </not>
+      <not> <serving_mcc_in list="all_europe_m"/> </not>
+      <not> <serving_mcc_in list="local_service_mccs"/> </not>
+      <have_location />
+    </all_of>
+    <then>
+	<rf_bands list="rf_bands_roam" />
+    </then>
+  </if>
+</policy>

@@ -1,0 +1,202 @@
+{
+  "scope": "Reviewed public deliverables; README unchanged.",
+  "excluded": {
+    "outputs/Malaysia-MBN-mapping/SOG09-before-neutral-all-changes-backup.zip": "Complete device backup contains device/subscriber state; retained locally."
+  },
+  "redactions": [
+    "Removed neutral-result boot identifier, including recovery archive copy.",
+    "Replaced temporary newUE-Identity in decoded setup with zero."
+  ],
+  "files": [
+    {
+      "path": "outputs/avb-audit/findings.md",
+      "bytes": 2454,
+      "sha256": "5b159dfbb2bc09e8536ee097d21d43a43868b3796241d5d886f46915f93365f4"
+    },
+    {
+      "path": "outputs/BIMB-static-audit/findings.md",
+      "bytes": 3501,
+      "sha256": "e2bbfe9890c6aa63a6432e8151d3d7ff976df5eff086a2c7d13cb40a282ccf87"
+    },
+    {
+      "path": "outputs/carrier-policy-location/findings.md",
+      "bytes": 1371,
+      "sha256": "4fd771bc0af9f3963f33a523afc854a8b76f28208e51389bbfc8e6956ee16978"
+    },
+    {
+      "path": "outputs/current-camping-audit/band_set_01.READBACK.xml",
+      "bytes": 9353,
+      "sha256": "a6a097ca3afa9e4ec77ad4a4801dcd3270d591453eea8f194e2af63655f07bc8"
+    },
+    {
+      "path": "outputs/efs-carrier-search/findings.md",
+      "bytes": 1421,
+      "sha256": "6cea4d7000363c5ed4e97d155d45a6a67ffd86638089eae6392396a61d3ab82b"
+    },
+    {
+      "path": "outputs/EFS-Malaysia-policy/band_set_01.ORIGINAL.xml",
+      "bytes": 8345,
+      "sha256": "b7823827d24987d5a71c4649087d3c8b39ebbc8b46a74dc78ec736d872e80921"
+    },
+    {
+      "path": "outputs/global-comparison/findings.md",
+      "bytes": 2496,
+      "sha256": "d9fc42143622b95b8e0f189732cbb05a043c719d550fd481d1245e9d81eaf23a"
+    },
+    {
+      "path": "outputs/Malaysia-MBN-mapping/mapping-review.md",
+      "bytes": 2398,
+      "sha256": "2599f1e48f935744a8eb07b58f9d7affea813bdf7f50c3f96e2c4c9aebfe1972"
+    },
+    {
+      "path": "outputs/Malaysia-MBN-mapping/neutral-result.json",
+      "bytes": 883,
+      "sha256": "a6488f61e8b15f38f07b6360998eb6c6878c7c4222d6f3d768975fd273c65f49"
+    },
+    {
+      "path": "outputs/Malaysia-MBN-mapping/neutral-selection.bin",
+      "bytes": 4023,
+      "sha256": "0d6970b188558bf5feda7e3646db8612432d91fd57fc177f86afa48e092ab42a"
+    },
+    {
+      "path": "outputs/Malaysia-MBN-mapping/neutral-selection.diff",
+      "bytes": 3146,
+      "sha256": "a8d7405ca973cac158088326671acd576e58a67a03fb010171853e0ce9e36a2f"
+    },
+    {
+      "path": "outputs/Malaysia-MBN-mapping/neutral-selection.xml",
+      "bytes": 51791,
+      "sha256": "04887be25299035e325592a98658acafd658edb06b7de88e678d2869f6b5e3d7"
+    },
+    {
+      "path": "outputs/Malaysia-MBN-mapping/SOG09-neutral-selection-recovery.zip",
+      "bytes": 39343,
+      "sha256": "4894062b6b551aa2e563fbae72724df42f6df831af2564287937281c5fbe2874"
+    },
+    {
+      "path": "outputs/Malaysia-NR-policy-candidate/band_set_01.EXPERIMENTAL.xml",
+      "bytes": 9353,
+      "sha256": "a6a097ca3afa9e4ec77ad4a4801dcd3270d591453eea8f194e2af63655f07bc8"
+    },
+    {
+      "path": "outputs/n28-20MHz-trial/n28-experimental-EFS-files.zip",
+      "bytes": 332,
+      "sha256": "3cc367796814c80b277d2b8d0a99450d3c6a18c46e3d64fc32d563765ab4d24e"
+    },
+    {
+      "path": "outputs/n28-20MHz-trial/n28-original-backups.zip",
+      "bytes": 1742,
+      "sha256": "06c8a825ace58db34c476d81eb72a852cabd1adbaaf1089ead37e66622e8cd68"
+    },
+    {
+      "path": "outputs/n28-bandwidth-investigation/n28-bandwidth-findings.md",
+      "bytes": 4019,
+      "sha256": "ae64c3f90241c76198f8883744abbe68f337f2602e0016bf1ee669926cf841a4"
+    },
+    {
+      "path": "outputs/NR-MIMO-audit/findings.md",
+      "bytes": 4595,
+      "sha256": "66f2305ff7bcea1561139c874b9f51ac512c5a98a1c9f5f1ee9a1f8d80444709"
+    },
+    {
+      "path": "outputs/NR-MIMO-audit/n78-decoded/0016-DL_CCCH_Message.txt",
+      "bytes": 39573,
+      "sha256": "5a241ac977d0988cc16a77236879191c8c5065bf85c8275db7474a6bccfb8610"
+    },
+    {
+      "path": "outputs/NR-MIMO-audit/reconnect-decoded/fresh-UE-NR-Capability.txt",
+      "bytes": 8896,
+      "sha256": "cdeeed8d57b4d0dbd9a091961da5ee44d926070b1c32b128b225dbb37e1dcffd"
+    },
+    {
+      "path": "outputs/SA-menu-trigger-investigation/menu-recovery-findings.md",
+      "bytes": 2181,
+      "sha256": "c32c95ee2dd7cb7ee991a914dfb0cd58757fb0c489c79d1a44d6f9d308a28079"
+    },
+    {
+      "path": "outputs/SA-regional-blocker-report.md",
+      "bytes": 4144,
+      "sha256": "6d881f49fc818a862c075b3a2935a48c83fc7602c178c57efdde2282839f30ef"
+    },
+    {
+      "path": "outputs/SOG09-SignalLab/README.md",
+      "bytes": 6020,
+      "sha256": "bc6cdc9b215d797f6927bf56f61125b2acd61b8df884b5774af286e715694624"
+    },
+    {
+      "path": "outputs/SOG09-SignalLab/SHA256.json",
+      "bytes": 294,
+      "sha256": "36c953bdf0b4b9ea28853d2b62e6370e9a1f30228367f52189c891161e6d6f8d"
+    },
+    {
+      "path": "outputs/SOG09-SignalLab/SOG09-SignalLab-0.1.apk",
+      "bytes": 20358679,
+      "sha256": "47e572bf73524778819e164cee21ff1ed12d50381aabc801254c8e62e930e28c"
+    },
+    {
+      "path": "outputs/SOG09-SignalLab/SOG09-SignalLab-source.zip",
+      "bytes": 20386926,
+      "sha256": "4db6f103b20d6861c448a1501c5e0fb1d82d4efd211c5d9f96b5bdbc35525fd9"
+    },
+    {
+      "path": "outputs/VoNR-viability/nr-voice-trial/NR-voice-trial-backup.zip",
+      "bytes": 1355,
+      "sha256": "f4c730b91c982ea1549dd712764ea9d8bdec0446794a6980120279ecba271140"
+    },
+    {
+      "path": "outputs/VoNR-viability/nr-voice-trial/NR-voice-trial-file.zip",
+      "bytes": 147,
+      "sha256": "1fd2247269ff136bcad84ec5eb74ee8019b0f594493bf5d603205459e574a946"
+    },
+    {
+      "path": "outputs/VoNR-viability/nr-voice-trial/verified-call-result.json",
+      "bytes": 567,
+      "sha256": "d62dec7fe69daf114ec850d64cdf2ef65219759c30d2dd019bcd6f462d79e5ac"
+    },
+    {
+      "path": "outputs/VoNR-viability/persistence-investigation/TEST-RESULT-CORRECTION.txt",
+      "bytes": 643,
+      "sha256": "fce629072bd01d677c77173da8ab26cad62487c20cec7499b064de91d549e538"
+    },
+    {
+      "path": "outputs/wifi-audit/AUTO-BOOT-TRIAL-RESULT.md",
+      "bytes": 1113,
+      "sha256": "c8ef6057d87255b3ac0e97a4043a623ae491c3391d1b49066d1fe3617833a3b6"
+    },
+    {
+      "path": "outputs/wifi-audit/github-review/ADAPTATION-RESULT.md",
+      "bytes": 1331,
+      "sha256": "755024bbf51ea37d3f0ce9eca1131d562d5cd90bb7e9e61c1d0aef0119fe90f5"
+    },
+    {
+      "path": "outputs/wifi-audit/SOG09-TW-WiFi-Recovery.zip",
+      "bytes": 1767,
+      "sha256": "7a84582d694bd0f3faa17696ca1529ef64a45f203aec428951467fae6dd1c96c"
+    },
+    {
+      "path": "outputs/wifi-audit/TW-HELPER-V12-RESULT.md",
+      "bytes": 1467,
+      "sha256": "65fa7efe72868ad735363d8855107611475efc8ec6389372086c8b0dd5ae697f"
+    },
+    {
+      "path": "outputs/wifi-audit/TW-PERSISTENCE-AVB.md",
+      "bytes": 1982,
+      "sha256": "44d3ff9cc851e5b86210d45976dcd7a95c8f95025a04d5a8dbcb98d8d877af81"
+    },
+    {
+      "path": "outputs/YTL-activation-results.txt",
+      "bytes": 1172,
+      "sha256": "9017e730f5acaf392bc662c0225080a59b0c9d7fa1566aa7c90beeeec46a3db4"
+    },
+    {
+      "path": "outputs/YTL-persistence-verified.txt",
+      "bytes": 1760,
+      "sha256": "f5b06cb2a642576c0e0ff01b4d8028da56920eaa2acf4fe577baaf88f116a672"
+    },
+    {
+      "path": "outputs/.gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    }
+  ]
+}

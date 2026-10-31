@@ -1,0 +1,3 @@
+CORRECTION / RESULT
+The user approved the isolated deletion and it was executed. Following manual modem restart, the same 32-byte digest regenerated. Those exact bytes occur in the original YTL MBN at offset 52039. This experiment did not establish corruption or fix persistence; no further digest deletion is warranted.
+NR voice support remained 01 after this modem restart. It had previously reverted to 00 after a full phone reboot. Android reports VoNR enabled, and the supported setter returned success, but the saved preference was already enabled during the failed boot. The reset writer and a root-free permanent fix remain unproven.

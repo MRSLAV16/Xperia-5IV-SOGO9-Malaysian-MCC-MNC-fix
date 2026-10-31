@@ -1,0 +1,11 @@
+YTL persistence verified on 31 October 2026 (Asia/Kuala_Lumpur).
+
+Slot0 PDC selection mode was changed from HYBRID (3) to DISABLED automatic selection (0), and the locally stored YTL_Commercial profile was selected and activated. Refresh mode, carrier selection family and flexible mapping were left unchanged. No selection XML/digest, MBN bytes, or manual band mask was edited.
+
+A full phone reboot was performed while idle. Boot ID changed from fcfcf254-9bde-4d54-a377-277c39f186d1 to b286a220-5ee6-4b2d-bc2a-3d81468bff79, and sys.boot_completed was 1. After startup, new PDC requests confirmed selection mode 0 and active ID 65589df5df646cc41682cba03103a6460fa8744c. Get Config Info confirmed YTL_Commercial, size 52080, version 0a012d01. No pending selection was reported.
+
+The Yes SIM (502152) was detected; Android reported LTE and the allowed network types were LTE|LTE_CA|NR. This persistence test does not establish 5G SA registration, VoLTE call functionality or behavior after firmware updates. Manual selection pins slot0 even if its SIM changes.
+
+Rollback: set slot0 selection mode back to HYBRID (3), wait for modem refresh to finish, rediscover its PDC endpoint, re-identify stock ROW and select/activate it if required. Firmware-backed ROW may be unqueryable while selection mode is 0. The last verified refreshed stock ROW ID was d21c3833e9a88008533a931a88179df9ab4f4e5e; IDs and endpoint ports must be checked afresh. The hybrid restoration and ROW return were exercised during the transition investigation. Local YTL need not be deleted.
+
+Current helper tools retained in /data/local/tmp: codex_pdc_selection_mode and codex_pdc_switch_persistence. Their source is saved with this report. Obsolete helper executables were removed.

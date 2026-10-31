@@ -1,0 +1,79 @@
+--- before
++++ neutral
+@@ -14,41 +14,13 @@
+   <if>
+     <any_of evaluate_all="true">
+       <tristate_reset_all return="false" />
+-      <customid_in not_present="false" store_in="customid">13</customid_in>
+-    </any_of>
+-    <then>
+-      <SelRecord carrier_name="DCM" country_code="356" iin="iin" imsi_3gpp="3gpp_imsi" customid="customid" mcfg_carrier_index="13" volte="true" vowifi="false" />
+-    </then>
+-  </if>
+-  <if>
+-    <all_of>
+-      <tristate_reset_all return="true" />
+-      <customid_in not_present="false" store_in="customid">7</customid_in>
+       <imsi_3gpp_plmn_in not_present="false" store_in="3gpp_imsi">502-152</imsi_3gpp_plmn_in>
+-    </all_of>
+-    <then>
+-      <SelRecord carrier_name="YTL" country_code="458" imsi_3gpp="3gpp_imsi" customid="customid" mcfg_carrier_index="45" volte="true" vowifi="false" />
+-    </then>
+-  </if>
+-  <if>
+-    <any_of evaluate_all="true">
+-      <tristate_reset_all return="false" />
+-      <customid_in not_present="false" store_in="customid">7</customid_in>
+-    </any_of>
+-    <then>
+-      <SelRecord carrier_name="KDDI" country_code="392" iin="iin" imsi_3gpp="3gpp_imsi" customid="customid" mcfg_carrier_index="7" volte="true" vowifi="false" />
++    </any_of>
++    <then>
++      <SelRecord carrier_name="YTL" country_code="458" imsi_3gpp="3gpp_imsi" mcfg_carrier_index="45" volte="true" vowifi="false" />
+     </then>
+   </if>
+ <!-- KDDI SA trial -->
+-  <if>
+-    <any_of evaluate_all="true">
+-      <tristate_reset_all return="false" />
+-      <customid_in not_present="false" store_in="customid">239</customid_in>
+-    </any_of>
+-    <then>
+-      <SelRecord carrier_name="KDDI_SA" country_code="392" iin="iin" imsi_3gpp="3gpp_imsi" customid="customid" mcfg_carrier_index="239" volte="true" vowifi="false" />
+-    </then>
+-  </if>
+   <if>
+     <any_of evaluate_all="true">
+       <tristate_reset_all return="false" />
+@@ -60,15 +32,6 @@
+     </any_of>
+     <then>
+       <SelRecord carrier_name="Reliance" country_code="356" iin="iin" imsi_3gpp="3gpp_imsi" impi="impi" mcfg_carrier_index="27" volte="true" vowifi="false" />
+-    </then>
+-  </if>
+-  <if>
+-    <any_of evaluate_all="true">
+-      <tristate_reset_all return="false" />
+-      <customid_in not_present="false" store_in="customid">28</customid_in>
+-    </any_of>
+-    <then>
+-      <SelRecord carrier_name="SBM" country_code="392" iin="iin" imsi_3gpp="3gpp_imsi" customid="customid" mcfg_carrier_index="28" volte="true" vowifi="false" />
+     </then>
+   </if>
+   <if>
+@@ -1194,6 +1157,15 @@
+     </then>
+   </if>
+   <if>
++    <any_of evaluate_all="true">
++      <tristate_reset_all return="false" />
++      <imsi_3gpp_plmn_in not_present="false" store_in="3gpp_imsi">502-18</imsi_3gpp_plmn_in>
++    </any_of>
++    <then>
++      <SelRecord carrier_name="UMobile" country_code="458" imsi_3gpp="3gpp_imsi" mcfg_carrier_index="61" volte="true" vowifi="false" />
++    </then>
++  </if>
++  <if>
+     <tristate_reset_all return="true" />
+     <then>
+       <SelRecord carrier_name="ROW" iin="iin" imsi_3gpp="3gpp_imsi" mcfg_carrier_index="8" />
