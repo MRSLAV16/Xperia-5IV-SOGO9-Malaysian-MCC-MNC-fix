@@ -1,0 +1,64 @@
+{
+  "report_date": "2026-11-01",
+  "dirtyfrag": {
+    "package": "df.root",
+    "versionName": "1.16",
+    "versionCode": 33,
+    "release": "https://github.com/mitschud/DirtyFrag/releases/tag/v1.16",
+    "source_commit": "205ceee98612908cc2d52e7529c91498e4fc7969",
+    "upstream_engine": "DFRoot 4.5 (release-note attribution)",
+    "sha256_installed_apk": "fb0f8e253a0d3c15f01e489922c9a42baef5dd9ce7b61cac8ec0660cfde445d3",
+    "sha256_official_release_asset": "fb0f8e253a0d3c15f01e489922c9a42baef5dd9ce7b61cac8ec0660cfde445d3",
+    "release_asset_identity": "exact match"
+  },
+  "cve": {
+    "id": "CVE-2026-43284",
+    "title": "xfrm: esp: avoid in-place decrypt on shared skb frags",
+    "record_published": "2026-05-08T07:21:47.524Z",
+    "record_updated": "2026-10-15T01:19:19.235Z",
+    "primary_record": "https://cveawg.mitre.org/api/cve/CVE-2026-43284",
+    "primary_research": "https://github.com/V4bel/dirtyfrag",
+    "other_dirtyfrag_cve": "CVE-2026-43500 is described by the original Linux research; use of that RxRPC path on this phone was not established"
+  },
+  "recorded_root_test_platform": {
+    "android": "14",
+    "security_patch": "2025-10-01",
+    "kernel": "5.10.236-android12-9-00014-gb97c62c4e7d1-ab13436420",
+    "selected_KMI": "android12-5.10"
+  },
+  "external_apps": [
+    {
+      "name": "ReSukiSU",
+      "package": "com.resukisu.resukisu",
+      "version": "v4.2.0-rc3",
+      "versionCode": 35171,
+      "role": "SU manager, per-app grants, root modules; exact manager source commit not established",
+      "upstream": "https://resukisu.org/",
+      "project_migration": "https://github.com/ReSukiSU"
+    },
+    {
+      "name": "Qualcomm Band Menu",
+      "package": "dev.qcom.bandmenu",
+      "version": "7.0.0",
+      "native_backend_version": "5.0.0",
+      "role": "Band/RAT selection, service and startup-recovery investigation",
+      "upstream": "https://github.com/Fronsipswu/qcom-band-menu"
+    },
+    {
+      "name": "Qualcomm EFS Browser",
+      "package": "dev.qcom.efs",
+      "version": "1.4.7",
+      "versionCode": 15,
+      "role": "Manual modem EFS export/edit/restore workflow",
+      "upstream": "https://github.com/catxeon/qcom-efs-browser",
+      "identity_check": "Installed package/version matched upstream applicationId/version; no release-asset hash match claimed"
+    },
+    {
+      "name": "Cellular-Pro",
+      "package": "make.more.r2d2.play.cellular_pro",
+      "version": "2.0.16",
+      "role": "Measurements, signalling views and logs; proprietary app, no code/libraries incorporated in Signal Lab"
+    }
+  ],
+  "method": "Installed APK metadata, saved root-log platform banner, live package-manager queries, upstream release metadata, source applicationId/version declarations and CVE record. No root exploit was executed for this documentation update."
+}

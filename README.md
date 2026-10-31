@@ -12,6 +12,7 @@ The linked evidence includes intermediate investigation reports. Results reporte
 
 ### Report contents
 
+- [External tools and provenance](#external-tools-and-provenance)
 - [1. Device and scope](#1-device-and-scope)
 - [2. Interpretation criteria](#2-interpretation-criteria)
 - [3. MBN access and analysis](#3-mbn-access-and-analysis)
@@ -36,6 +37,63 @@ The linked evidence includes intermediate investigation reports. Results reporte
 - [22. Reproducibility and rollback](#22-reproducibility-and-rollback)
 - [23. Remaining work](#23-remaining-work)
 - [24. Technical references](#24-technical-references)
+
+## External tools and provenance
+
+The investigation used the following external projects in addition to the repository's diagnostic helpers. Installed software, source references and experimental adaptations are distinguished below. Package names are included to avoid confusing similarly named tools.
+
+| Tool or project | Recorded version | Role in this investigation | Upstream material |
+|---|---|---|---|
+| DirtyFrag | `1.16`, package `df.root`, version code 33 | Temporary root bootstrap for privileged ADB, modem diagnostics and root-module tests | [Exact release](https://github.com/mitschud/DirtyFrag/releases/tag/v1.16), [source revision](https://github.com/mitschud/DirtyFrag/tree/205ceee98612908cc2d52e7529c91498e4fc7969) |
+| DFRoot | Engine 4.5, as attributed by DirtyFrag v1.16 release notes | Upstream root-bootstrap implementation; not a second separately verified APK installation | [DFRoot project](https://github.com/diabl0w/DFRoot) |
+| ReSukiSU / KernelSU | Installed manager `v4.2.0-rc3`, package `com.resukisu.resukisu`, version code 35171 | Per-application root grants, SU daemon and module management | [ReSukiSU documentation](https://resukisu.org/), [historical project and migration notice](https://github.com/ReSukiSU), [KernelSU](https://github.com/tiann/KernelSU) |
+| Qualcomm Band Menu | App `7.0.0`, package `dev.qcom.bandmenu`; examined backend `5.0.0` | RAT/band selection, serving-cell inspection and startup-triggered recovery analysis | [qcom-band-menu](https://github.com/Fronsipswu/qcom-band-menu) |
+| Qualcomm EFS Browser | `1.4.7`, package `dev.qcom.efs`, version code 15 | Manual modem EFS export, targeted file installation and backup/restore workflow | [qcom-efs-browser](https://github.com/catxeon/qcom-efs-browser) |
+| Cellular-Pro | `2.0.16`, package `make.more.r2d2.play.cellular_pro` | Signal measurements, signalling displays, screenshots and initial exported logs | [Package listing](https://play.google.com/store/apps/details?id=make.more.r2d2.play.cellular_pro); [inspection summary](#20-diagnostic-implementation-and-sog09-signal-lab) |
+| Xperia Convenience Module | Examined `US20251125` variant | Wi-Fi country/property implementation reference; a bounded MY adaptation was tested and rolled back | [Upstream project](https://github.com/htcmagehoho/Xperia-Convenience-Module), [adaptation results](outputs/wifi-audit/github-review/ADAPTATION-RESULT.md) |
+| Android Platform Tools | ADB; exact installed release not archived | Device connection, binary transfer, package inspection and Android service queries | [Platform Tools](https://developer.android.com/tools/releases/platform-tools), [ADB documentation](https://developer.android.com/tools/adb) |
+| Android SDK / NDK | Build Tools `35.0.0`, platform `android-35`, NDK `28.2.13676358` | Compile native helpers, inspect Android packages and build/sign Signal Lab | [SDK Build Tools](https://developer.android.com/tools/releases/build-tools), [NDK](https://developer.android.com/ndk), [Signal Lab source](outputs/SOG09-SignalLab/SOG09-SignalLab-source.zip) |
+| libqmi | Schema reference; no CLI release pinned | Interpret QMI NAS/DMS/PDC fields used by the local QRTR helpers | [Primary source and schemas](https://github.com/linux-mobile-broadband/libqmi) |
+| SCAT | Parser source reference; not established as a standalone installed capture application | Verify Qualcomm diagnostic framing and NR RRC packet layout | [NR parser](https://github.com/fgsect/scat/blob/master/src/scat/parsers/qualcomm/diagnrlogparser.py) |
+| pycrate | `0.8.1` | ASN.1 UPER decoding on the workstation and inside Signal Lab | [Project](https://github.com/pycrate-org/pycrate) |
+| BeeWare Android Python support | `3.10-b2` | Embedded ARM64 Python runtime used by the Signal Lab prototype | [Exact runtime release](https://github.com/beeware/Python-Android-support/releases/tag/3.10-b2) |
+| AOSP avbtool | Exact source revision not archived | Read-only parsing of active-slot AVB metadata | [Primary source](https://android.googlesource.com/platform/external/avb/+/refs/heads/main/avbtool.py) |
+
+The installed EFS Browser package/version matched its upstream build declarations. That is a package-level identification, not a claim of a byte-for-byte release match. Proprietary Cellular-Pro components were inspected but were not redistributed or incorporated into Signal Lab. The complete Xperia Convenience Module was not installed as the successful Wi-Fi fix.
+
+### DirtyFrag release and vulnerability revision
+
+The archived installed APK matched the official DirtyFrag v1.16 release asset exactly:
+
+```text
+Release: v1.16
+Release date: 2026-10-15
+Source commit: 205ceee98612908cc2d52e7529c91498e4fc7969
+Installed APK and official asset SHA-256:
+fb0f8e253a0d3c15f01e489922c9a42baef5dd9ce7b61cac8ec0660cfde445d3
+Upstream engine attribution: DFRoot 4.5
+```
+
+The relevant Android root primitive is **CVE-2026-43284**, the Linux XFRM/ESP shared-page decryption issue. The Linux-assigned CVE record is titled `xfrm: esp: avoid in-place decrypt on shared skb frags`. The reviewed record was published on 8 May 2026 and updated on 15 October 2026.
+
+Sources: [machine-readable CVE record](https://cveawg.mitre.org/api/cve/CVE-2026-43284), [CVE entry](https://www.cve.org/CVERecord?id=CVE-2026-43284), [Android implementation](https://github.com/diabl0w/DFRoot).
+
+The original [Dirty Frag research](https://github.com/V4bel/dirtyfrag) also describes an RxRPC primitive, **CVE-2026-43500**. That separate Linux chain must not be presented as another demonstrated exploit on this Xperia: use of the RxRPC path was not established in the recorded Android tests.
+
+### Recorded root-test platform
+
+```text
+Android: 14
+Security patch level: 2025-10-01
+Kernel: 5.10.236-android12-9-00014-gb97c62c4e7d1-ab13436420
+Selected exploit module KMI: android12-5.10
+```
+
+These values came from the saved root-run banner. A security-patch label or kernel version alone is not a complete vulnerability test because vendor backports can differ.
+
+DirtyFrag supplied temporary root access. ReSukiSU/KernelSU supplied the root-management environment; neither was the modem compatibility correction. EFS provisioning could survive root-free operation even when the exploit itself had to be rerun after reboot. Automatic re-rooting failed in the controlled startup trial and was not treated as permanent root. No replacement boot image was flashed for this workflow.
+
+The provenance record contains release metadata and identity checks without distributing the root APK: [tool-provenance.json](outputs/tooling/tool-provenance.json). This documentation update did not execute an exploit or change phone provisioning.
 
 ## 1. Device and scope
 
