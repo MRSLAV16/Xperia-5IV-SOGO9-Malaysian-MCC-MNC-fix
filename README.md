@@ -1,12 +1,43 @@
-# Sony Xperia 5 IV SOG09 — Full Investigation, Fixes and Recovery Record
+# Sony Xperia 5 IV SOG09: Malaysian Network Compatibility Investigation
 
-Recorded through 1 November 2026, Asia/Kuala_Lumpur.
+**Report date:** 1 November 2026, Asia/Kuala_Lumpur.
 
-This document consolidates the work performed in this workspace and the supplied conversation history. It describes the steps actually used, their results, failed experiments, remaining uncertainties and available rollback material. Early reports describe intermediate states; later successful tests do not retroactively make every initial hypothesis correct.
+**Test platform:** Sony Xperia 5 IV SOG09, KDDI/K4, build `64.2.D.2.261`.
 
-This is a record for this particular phone and firmware, not a universal SOG09 flashing guide. Do not apply the supplied binary offsets or carrier indices to a different file revision. Some older manual steps are known from the conversation rather than a complete machine-readable transcript; where the exact successful sequence was not isolated, that is stated explicitly.
+This report documents the investigation of Malaysian 5G SA, IMS, Wi-Fi and modem diagnostics on the Japanese KDDI Xperia 5 IV SOG09. It records applicable restrictions, revision-specific corrections, validation results, rollback procedures and unresolved conditions.
 
-## 1. Device, objective and final scope
+The investigation established n28 and n78 SA data service, n28 operation at 20 MHz, successful NR-only call establishment in recorded trials, and offline NR RRC decoding on the device. These results apply to the examined phone and file revisions; they do not establish complete equivalence with global firmware.
+
+The linked evidence includes intermediate investigation reports. Results reported before a controlled change must be distinguished from subsequent validation. Where the exact recovery sequence or reset writer was not isolated, the report retains that limitation.
+
+### Report contents
+
+- [1. Device and scope](#1-device-and-scope)
+- [2. Interpretation criteria](#2-interpretation-criteria)
+- [3. MBN access and analysis](#3-mbn-access-and-analysis)
+- [4. Selecting YTL instead of ROW](#4-selecting-ytl-instead-of-row)
+- [5. Regional PolicyMan NR block in Malaysia](#5-regional-policyman-nr-block-in-malaysia)
+- [6. n28 bandwidth correction](#6-n28-bandwidth-correction)
+- [7. Band-menu startup and registration recovery](#7-band-menu-startup-and-registration-recovery)
+- [8. IMS, VoNR and the NR voice item](#8-ims-vonr-and-the-nr-voice-item)
+- [9. Neutral SIM selection and Malaysian mappings](#9-neutral-sim-selection-and-malaysian-mappings)
+- [10. Carrier-policy reference and accessible EFS inventory](#10-carrier-policy-reference-and-accessible-efs-inventory)
+- [11. Wi-Fi investigation: actual blockers](#11-wi-fi-investigation-actual-blockers)
+- [12. TW override and working 5 GHz hotspot](#12-tw-override-and-working-5-ghz-hotspot)
+- [13. Automatic root, reboot and kernel stability](#13-automatic-root-reboot-and-kernel-stability)
+- [14. AVB coverage](#14-avb-coverage)
+- [15. Global-behavior audit](#15-global-behavior-audit)
+- [16. Banking and debugging state](#16-banking-and-debugging-state)
+- [17. GNSS and temporary display settings](#17-gnss-and-temporary-display-settings)
+- [18. SISO/MIMO investigation](#18-sisomimo-investigation)
+- [19. Direct DIAG capture: problems and working procedure](#19-direct-diag-capture-problems-and-working-procedure)
+- [20. Diagnostic implementation and SOG09 Signal Lab](#20-diagnostic-implementation-and-sog09-signal-lab)
+- [21. Persistence assessment](#21-persistence-assessment)
+- [22. Reproducibility and rollback](#22-reproducibility-and-rollback)
+- [23. Remaining work](#23-remaining-work)
+- [24. Technical references](#24-technical-references)
+
+## 1. Device and scope
 
 | Item | Details |
 |---|---|
@@ -21,7 +52,7 @@ This is a record for this particular phone and firmware, not a universal SOG09 f
 
 Confirmed outcomes include Yes n28/n78 SA, n28 20 MHz operation, successful NR-only calling in recorded trials, working 5 GHz 80 MHz hotspot and a dedicated rooted signalling app. This did not convert every Japanese-specific Android component into global firmware.
 
-## 2. Essential distinctions used during diagnosis
+## 2. Interpretation criteria
 
 - Receiving MIB/SIB1 proves reception of a broadcast; it does not prove registration, a working uplink or an active data session.
 - `YTL_Commercial` being selected does not itself establish that every policy, band limit and IMS setting is suitable.
@@ -32,11 +63,11 @@ Confirmed outcomes include Yes n28/n78 SA, n28 20 MHz operation, successful NR-o
 - An EFS read timeout is not equivalent to `ENOENT`/file absence.
 - Reboot persistence, root-free operation and firmware-update persistence are separate claims.
 
-## 3. Initial access and MBN extraction
+## 3. MBN access and analysis
 
 ### Problem
 
-Ordinary `adb pull` of the modem firmware directory returned permission denied. A root-assisted copy followed by `chmod` also failed at the permission-change step in the supplied history.
+Ordinary `adb pull` returned permission denied. A root-assisted copy followed by `chmod` also failed at the permission-change step.
 
 The files of interest were:
 
@@ -52,7 +83,7 @@ The files of interest were:
 3. Compare size, SHA-256, ELF segment boundaries, MCFG records and readable strings.
 4. Preserve the originals; do not trim padding, rewrite headers or treat arbitrary bytes as a documented Qualcomm schema.
 
-For future root-readable binary extraction, this pattern avoids Windows text-output conversion. It is a general extraction method, not a claim that it was the exact command used for the first uploaded files:
+The following binary-safe extraction pattern avoids Windows text-output conversion. It is an example method rather than a reconstruction of the original export command:
 
 ```python
 from pathlib import Path
@@ -60,7 +91,7 @@ import subprocess
 
 remote = "/absolute/root-readable/path/to/file"
 result = subprocess.run(
-    [r"C:\platform-tools\adb.exe", "-s", "QV771XEDEE",
+    [r"C:\platform-tools\adb.exe", "-s", "<ADB_SERIAL>",
      "exec-out", "su", "-c", "cat " + remote],
     check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
 )
@@ -175,11 +206,11 @@ Restore the matching original policy, read it back and refresh the modem. Do not
 
 Files: [final read-back policy](outputs/current-camping-audit/band_set_01.READBACK.xml), [matching prepared policy](outputs/Malaysia-NR-policy-candidate/band_set_01.EXPERIMENTAL.xml), [original policy](outputs/EFS-Malaysia-policy/band_set_01.ORIGINAL.xml), [blocker report](outputs/SA-regional-blocker-report.md). The separate 9155-byte file in `EFS-Malaysia-policy` is an earlier artifact, not the final 9353-byte payload identified above.
 
-## 6. n28: 10 MHz capability versus a 20 MHz carrier
+## 6. n28 bandwidth correction
 
 ### Evidence
 
-The phone could receive n28 broadcasts but was unreliable or unable to register. The supplied SIB1 described a 20 MHz carrier: 106 PRBs at 15 kHz. The earlier UE capability advertised a 10 MHz n28 limit.
+The phone could receive n28 broadcasts but was unreliable or unable to register. The captured SIB1 described a 20 MHz carrier: 106 PRBs at 15 kHz. The earlier UE capability advertised a 10 MHz n28 limit.
 
 Two live files matched the stock K4 hardware-profile payload:
 
@@ -188,7 +219,7 @@ Two live files matched the stock K4 hardware-profile payload:
 /nv/item_files/modem/nr5g/RRC/cap_limit_bw_Subscription01
 ```
 
-Both were 816 bytes. Band-associated groups and capability bitmaps were cross-checked across regional profiles and against TS 38.306. This supported a narrow bandwidth-mask interpretation; it was not presented as a complete official schema.
+Both were 816 bytes. Band-associated groups and capability bitmaps were cross-checked across regional profiles and against [TS 38.306](https://www.etsi.org/deliver/etsi_ts/138300_138399/138306/16.05.00_60/ts_138306v160500p.pdf). This supported a narrow bandwidth-mask interpretation; it was not presented as a complete official schema.
 
 ### Exact change on this revision
 
@@ -207,7 +238,7 @@ The change added the empirically identified 20 MHz allowance while retaining the
 3. Compare them with the saved K4 hardware-profile records.
 4. Patch only the verified byte in copies of these exact payloads.
 5. Confirm the two patched copies have the expected full hash and no other differences.
-6. Install both through modem EFS; the user also used the prepared files in EFS Explorer.
+6. Install both through modem EFS; the prepared files were also installed through EFS Explorer.
 7. Read back both files independently.
 8. Refresh/restart the modem and test n28 registration/data.
 9. Capture a fresh UE capability exchange and verify that 20 MHz is advertised.
@@ -235,7 +266,7 @@ Files: [original backups](outputs/n28-20MHz-trial/n28-original-backups.zip), [pr
 
 The initial investigation correctly says its own controlled write had not yet happened. Its historical “not tested” status is superseded by the subsequent successful trials and fresh capability capture.
 
-## 7. Qualcomm Band Menu appeared to recover service
+## 7. Band-menu startup and registration recovery
 
 ### Symptom
 
@@ -281,7 +312,7 @@ The tested working payload was the single binary byte `01`, not the text charact
 ### Results and limits
 
 - A logged call reached ACTIVE with NR radio technology at the start and end; cellular rather than Wi-Fi calling was reported.
-- The user later confirmed successful calling after a root-free reboot.
+- Successful calling after a later root-free reboot was reported.
 - Earlier root-free tests had failed and showed the item reverted to `00`.
 - Android's supported VoNR setter was also inspected/tested, but an enabled preference did not prevent an earlier failure.
 - The exact reset writer and a universally reproducible root-free persistence mechanism were not conclusively isolated.
@@ -297,7 +328,7 @@ Files: [verified call record](outputs/VoNR-viability/nr-voice-trial/verified-cal
 
 ### Digest deletion: tested, but not an established fix
 
-The explicitly approved isolated deletion concerned:
+The isolated controlled deletion concerned:
 
 ```text
 /nv/item_files/mcfg/mcfg_sw_config_digest_version
@@ -359,9 +390,9 @@ Automatic YTL selection and SA/IMS registration were observed in root-free testi
 
 Restore the original wrapped database, not just its decoded XML. Restore the matching selection mode if it was changed, refresh the modem, then verify the active configuration and real service.
 
-Files: [mapping review](outputs/Malaysia-MBN-mapping/mapping-review.md), [XML diff](outputs/Malaysia-MBN-mapping/neutral-selection.diff), [recovery package](outputs/Malaysia-MBN-mapping/SOG09-neutral-selection-recovery.zip), [before-change backup](outputs/Malaysia-MBN-mapping/SOG09-before-neutral-all-changes-backup.zip).
+Files: [mapping review](outputs/Malaysia-MBN-mapping/mapping-review.md), [XML diff](outputs/Malaysia-MBN-mapping/neutral-selection.diff), [recovery package](outputs/Malaysia-MBN-mapping/SOG09-neutral-selection-recovery.zip), [backup exclusion record](outputs/PUBLICATION-MANIFEST.json).
 
-## 10. Finding carrier_policy and auditing accessible EFS
+## 10. Carrier-policy reference and accessible EFS inventory
 
 The search was expanded beyond guessed paths because `policies.xml` referenced `carrier_policy` while direct queries returned not found.
 
@@ -429,7 +460,7 @@ Evidence: [adaptation result](outputs/wifi-audit/github-review/ADAPTATION-RESULT
 
 ## 12. TW override and working 5 GHz hotspot
 
-The user explicitly requested TW after discussing the country restriction. This was a forced test country, not proof that those regulatory settings apply at the phone's location.
+TW was applied as a forced test country. This does not establish that its regulatory domain applies at the operating location.
 
 ### Working runtime command
 
@@ -497,14 +528,14 @@ Evidence: [v1.2 fix](outputs/wifi-audit/TW-HELPER-V12-RESULT.md), [persistence a
 
 The exploit/root bootstrap was separate from modem provisioning. Earlier unexpected reboots and an exploit-related kernel fault were investigated through pstore/Dropbox/kernel records. One saved fault implicated module insertion during the root-loading path.
 
-An explicitly approved single test enabled `df.root`'s boot receiver and rebooted:
+A controlled single test enabled `df.root`'s boot receiver and rebooted:
 
 1. Boot completed.
 2. Verified boot still reported green.
 3. Automatic root was unavailable.
 4. Wi-Fi country returned to MY.
 5. The boot receiver was disabled again.
-6. The user manually restored root without a further reboot.
+6. Root was subsequently restored manually without a further reboot.
 
 The manual run overwrote the private last-run log, so the exact automatic-start failure could not be recovered from it. Bounded crash records did not show a new panic, which is not proof that every possible fault was excluded.
 
@@ -512,9 +543,9 @@ Automatic root was left disabled after the trial. Disabled experimental Wi-Fi/YT
 
 **Result:** automatic root/TW after boot remains unresolved. Manual root availability and successful modem persistence do not establish reliable exploit auto-start.
 
-Evidence: [approved boot test](outputs/wifi-audit/AUTO-BOOT-TRIAL-RESULT.md).
+Evidence: [controlled boot test](outputs/wifi-audit/AUTO-BOOT-TRIAL-RESULT.md).
 
-## 14. What AVB actually covered
+## 14. AVB coverage
 
 The active `_b` slot metadata was read and parsed using AOSP avbtool. This was descriptor/mount inspection, not a full independent hash verification of every partition.
 
@@ -552,7 +583,7 @@ Evidence: [global comparison](outputs/global-comparison/findings.md).
 
 ## 16. Banking and debugging state
 
-The user reported banking worked during a root-free state. A later static BIMB Mobile audit examined installed APKs without opening banking screens, reading credentials/account databases or intercepting requests.
+Banking operation was reported during a root-free state. A later static BIMB Mobile audit examined installed APKs without opening banking screens, reading credentials/account databases or intercepting requests.
 
 Found code references included:
 
@@ -563,7 +594,7 @@ Found code references included:
 
 Code presence did not establish every active check or server-side policy. No bypass, trick, patched banking APK or attestation spoof was produced.
 
-ADB/DIAG were disabled during an earlier user-requested banking cleanup. The user later explicitly asked to keep ADB enabled, so those earlier settings are not the final debugging preference.
+ADB/DIAG were disabled during an earlier banking-oriented test and subsequently enabled for further diagnostics. The earlier disabled state is not the final recorded configuration.
 
 Evidence: [static audit](outputs/BIMB-static-audit/findings.md).
 
@@ -594,7 +625,7 @@ A temporary longer screen timeout/stay-awake setting was used for diagnosis and 
 
 Subscription copies and other combination controls were also checked. No verified global force-SISO override was found. LTE `asdiv_ulca_disable` was not reinterpreted as an NR MIMO switch. Power/backoff and RF calibration were not modified.
 
-### n28: fresh confirmed result
+### n28 capability and configured rank
 
 | Evidence layer | Observed result |
 |---|---|
@@ -606,7 +637,7 @@ The screenshot also showed poor signal quality, about −3.9 dB SINR, 22 dBm rep
 
 **Conclusion:** one-layer n28 operation is consistent with both current advertised and configured limits. The cause of the phone's advertised limit—RF design, firmware or an unidentified policy—remains unresolved. No validated two-layer n28 patch exists from this work.
 
-### n78: incomplete evidence
+### n78 initial configuration and evidence limits
 
 - An earlier capability advertised two UL layers for the n78 feature set.
 - A direct n78 capture on Yes ARFCN 627360/PCI 238 showed initial `maxRank 1` and one SRS port.
@@ -644,7 +675,7 @@ Evidence: [file audit](outputs/NR-MIMO-audit/findings.md), [fresh n28 capability
 
 This workflow records signalling rather than changing EFS provisioning. It does not mean that every packet emitted by this modem is understood.
 
-## 20. Cellular-Pro inspection and SOG09 Signal Lab
+## 20. Diagnostic implementation and SOG09 Signal Lab
 
 ### Inspection findings
 
@@ -746,7 +777,7 @@ No live PHY rank counters, throughput decoder, NAS/LTE decoding, maps or band lo
 
 Artifacts: [APK](outputs/SOG09-SignalLab/SOG09-SignalLab-0.1.apk), [source archive](outputs/SOG09-SignalLab/SOG09-SignalLab-source.zip), [app instructions](outputs/SOG09-SignalLab/README.md), [hashes](outputs/SOG09-SignalLab/SHA256.json).
 
-## 21. Persistence matrix
+## 21. Persistence assessment
 
 | Item | What was demonstrated | What remains unproven |
 |---|---|---|
@@ -754,12 +785,12 @@ Artifacts: [APK](outputs/SOG09-SignalLab/SOG09-SignalLab-0.1.apk), [source archi
 | Neutral SIM database | Readback and root-free SA/IMS selection tests | Every Malaysian SIM and future profile refresh |
 | Malaysia band policy | Applied/read back; SA subsequently worked | Firmware-update retention |
 | n28 bandwidth patch | Readback and fresh 20 MHz capability/live operation | Other file revisions/phones |
-| NR voice byte | Working NR calls, including user-confirmed root-free reboot trial | Exact reset writer and unconditional persistence |
+| NR voice byte | Working NR calls, including reported root-free reboot trial | Exact reset writer and unconditional persistence |
 | TW override | Manual/root-module runtime application | Root-free or reliable automatic-root startup |
 | 80 MHz hotspot | Actual AP/client verification | 160 MHz and 6 GHz |
 | Signal Lab | Installed; offline replay and app live capture passed | Modern runtime, broader modem formats and general release readiness |
 
-## 22. Recovery and repeatability checklist
+## 22. Reproducibility and rollback
 
 Before repeating any modem modification:
 
@@ -775,7 +806,7 @@ Before repeating any modem modification:
 
 For NR-only failures, returning to the phone's previously working normal 5G/4G mode is a useful service recovery step. Do not delete entire NV/EFS trees, replace RF calibration, flash foreign hardware profiles or erase modem partitions based on this report.
 
-Some historical EFS writes were performed manually by the user. This report does not invent a universal modem-restart command: an Android-supported restart attempt was denied during the investigation, and a manual EFS-tool workflow was used instead. A full phone reboot also re-enters the separate exploit/root-startup behavior.
+Some historical EFS writes were performed manually through EFS Explorer. No universal modem-restart command is asserted: an Android-supported restart attempt was denied during the investigation, and a manual EFS-tool workflow was used instead. A full phone reboot also re-enters the separate exploit/root-startup behavior.
 
 ## 23. Remaining work
 
@@ -787,7 +818,7 @@ Some historical EFS writes were performed manually by the user. This report does
 - Establish whether 160 MHz/6 GHz is supported by the complete hardware/firmware/regulatory stack.
 - Expand Signal Lab with verified packet layouts, NAS/LTE support, modern embedded runtime and robust foreground-service handling.
 
-## 24. References
+## 24. Technical references
 
 - [AOSP AVB implementation and documentation](https://android.googlesource.com/platform/external/avb/)
 - [ETSI TS 38.306 — UE radio access capabilities](https://www.etsi.org/deliver/etsi_ts/138300_138399/138306/16.05.00_60/ts_138306v160500p.pdf)
@@ -798,4 +829,4 @@ Some historical EFS writes were performed manually by the user. This report does
 - [pycrate](https://github.com/pycrate-org/pycrate)
 - [Archived BeeWare Android Python runtime](https://github.com/beeware/Python-Android-support/releases/tag/3.10-b2)
 
-Raw logs/backups can contain subscriber identifiers and network metadata. This report omits personal identifiers; review raw artifacts before publishing them with a GitHub issue or PR.
+Raw logs and backups can contain subscriber identifiers and network metadata. The published set excludes complete device backups and raw subscriber traces. The publication manifest identifies excluded and redacted material.
