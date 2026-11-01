@@ -1,5 +1,64 @@
 # Sony Xperia 5 IV SOG09: 5G SA, VoNR and Malaysian Carrier Fixes
 
+## Investigation update — 1 November 2026
+
+This update supersedes earlier persistence assumptions where noted. Results apply to the tested SOG09 and firmware; they are not universal carrier compatibility guarantees.
+
+### LTE B40 and carrier aggregation
+
+Live `/policyman/band_set_01.xml` excluded LTE B40 from the Malaysia list. Adding zero-based LTE index **39** to `rf_bands_malaysia`, preserving the NR settings, was followed by reported working B40 service. Fresh capability responses subsequently included B40. Individual band support does not establish support for a particular aggregation combination.
+
+An experimental Malaysia CA rule retained the original 10 entries and added exact entries from global A4/C2 policies, including B20/B40 strings from European operator rules. The added combinations did **not** appear in the captured LTE capabilities. This trial is not a verified CA fix.
+
+A controlled removal probe then removed only the two B3+B1 variants from the Malaysia rule. Two fresh capability responses dropped from **10 to 8 CA entries**, and both B3+B1 variants disappeared. This demonstrates that the edited rule executes. The missing additions are constrained downstream of that rule; the exact control and whether it reflects firmware or RF limitations remain unidentified. The probe was subsequently restored to the exact pre-probe CA trial file with readback verification.
+
+With B20/B40 band locking, responses advertised the bands individually without a CA combination list. Removing the lock restored the original CA entries. No active B20+B40 CA was established. Earlier NR capability exchanges advertised n28+n78 and n78+n78; those advertisements are not proof of active NR CA. No verified NR CA binary patch was produced.
+
+### Malaysian profile selection
+
+The saved selection database now places these exact home-PLMN rules before the ROW fallback:
+
+| SIM home PLMN | Bundled profile | Carrier index | Automatic NR voice repair scope |
+|---|---|---:|---|
+| 502-152 | YTL | 45 | Included |
+| 502-18 | UMobile | 61 | Included |
+| 502-12 | Maxis | 87 | Excluded |
+| 502-153 | P1 / legacy Unifi profile | 57 | Excluded |
+
+UMobile and P1 were loaded as unmodified stock profiles; Maxis was confirmed already available. The mapping database was backed up and independently read back. UMobile activation was verified, and subsequent field feedback reported YTL/UMobile selection and successful IMS registration. Future swaps and other subscriptions still require verification. The P1 profile is a legacy candidate, not a claim that every current Unifi service is validated.
+
+ROW remains the fallback for unmatched SIMs. No Celcom/Digi-specific profile was identified in the inspected SEA set. The bundled profile named `TM` identifies **Taiwan Mobile**, not Telekom Malaysia, and was not substituted for Unifi. Sub-brands/MVNOs must be matched by home PLMN and, where necessary, SIM-specific identifiers; shared towers or corporate ownership do not prove shared IMS provisioning.
+
+### VoNR reset and root recovery limitations
+
+The live `/nv/item_files/modem/mmode/nr5g_full_voice_support` byte was observed reset to **00** during the SIM/profile-switch investigation. Restoring **01**, with readback and a modem restart, was followed by reported working calls. Both stock ROW and UMobile profiles contain a record for this setting with encoded payload `07 00`; YTL does not contain the same named record. This supports provisioning as a reset source, but the exact writer/timing was not traced. Avoiding ROW alone does not prevent the UMobile profile from provisioning 00.
+
+A root module was developed locally for the tested Yes/YTL and UMobile SIM/profile pairs. The initial implementation had two material problems: a fixed PDC port failed after reboot when port 33 became port 30, and background diagnostic checks could interfere with Cellular-Pro. The fixed-port problem was corrected, but Cellular-Pro later reported missing signalling and UL/DL counters. Disabling the module and restarting diagnostic backends did not immediately restore all features, so the complete cause of that regression remains unresolved.
+
+The current **v1.4 candidate** uses a single guarded late-boot pass, approximately 45 seconds after Android boot completion, then releases DIAG and exits. A boot-completed hook and zygote-session duplicate guard were added for the exploit's soft-reboot flow. There is no continuous diagnostic polling or automatic SIM-change watcher. Manual one-shot execution has been verified; **v1.4 cold-/soft-reboot startup remains unverified** because root was unavailable at the subsequent boot check. This module is not presented here as a production-ready, root-free persistence fix. Module binaries and raw logs from this follow-up are not published with this README update.
+
+Root must exist when recovery runs. Installing a root module does not itself enable exploit autorun or guarantee KernelSU bootstrap. A modem reload may still be needed after repairing the EFS byte. No automatic modem restart was added.
+
+### VoLTE versus VoNR icon
+
+The inspected SystemUI supports a separate VoNR icon controlled partly by CarrierConfig `vonr_enabled_bool`. NR-SA voice/data registration can coexist with a VoLTE icon when that setting is false. A persistent one-key CarrierConfig override changed the visible icon to VoNR in live tests. Overrides are subscription-specific: an override for subscription 1 did not cover subscription 3, and Android rejected attempts to configure inactive subscription records without an assigned phone slot.
+
+The module's one-shot worker handles currently active subscriptions using the persistent CarrierConfig API. Saved values can remain effective without root, but applying values to newly active subscriptions requires another rooted pass. This flag may have telephony consumers beyond the icon; it is not a purely cosmetic guarantee. A VoNR icon, IMS registration, and a successful two-way call are distinct observations. SIP `200 OK` confirms IMS registration only when it is the response to `REGISTER`.
+
+### Exploit and deployment status
+
+The previously verified APK was DirtyFrag v1.16. A later installed v1.17 (versionCode 34) produced a saved successful bootstrap log and working root. The failed autorun attempt's private run log was not recovered before the successful run overwrote it. Boot timing remains a hypothesis, not an established cause. AVB continued to report green; this does not validate the security of the running kernel or establish that runtime changes are harmless.
+
+Official deployment information checked during this investigation:
+
+- [Yes 5G Advanced](https://www.yes.my/yes-5g-advanced/) advertises VoNR.
+- [U Mobile SA support](https://www.u.com.my/en/personal/support/self-help/5g-sa) describes SA and VoNR, subject to subscription/device requirements.
+- [Maxis SA FAQ](https://www.maxis.com.my/en/faq/network/5g-network/5g-sa/) states that consumer mobile plans remain NSA, while selected business plans support SA. Do not infer universal Maxis VoNR availability.
+
+The observed restrictions establish configuration behaviour, not a motive. Carrier certification, regional testing, product policy and commercial considerations are possible explanations; the evidence does not establish deliberate restriction for profit.
+
+---
+
 **Report date:** 1 November 2026, Asia/Kuala_Lumpur.
 
 **Test platform:** Sony Xperia 5 IV SOG09, KDDI/K4, build `64.2.D.2.261`.
